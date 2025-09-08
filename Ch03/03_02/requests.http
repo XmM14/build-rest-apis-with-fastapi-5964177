@@ -13,6 +13,9 @@ POST http://localhost:8000/sales
 ### Get sale (change ID)
 GET http://localhost:8000/sales/1
 
+### Invalid Key
+GET http://localhost:8000/sales/fjdklfj  fdlj
+
 ### Empty customer ID
 POST http://localhost:8000/sales
 
