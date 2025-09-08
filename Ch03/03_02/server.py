@@ -1,6 +1,5 @@
 from datetime import datetime
 from http import HTTPStatus
-
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
@@ -34,9 +33,14 @@ def new_sale(sale: Sale):
 
 @app.get('/sales/{key}')
 def get_sale(key: str) -> Sale:
+    if not key or not db.isValidKey(key):
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST,
+                            detail='Invalid sale key')
+
     record = db.get(key)
     if record is None:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='sale not found')
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND,
+                            detail='sale not found')
 
     s = Sale(
         time=record.time,

@@ -17,6 +17,12 @@ _lock = Lock()
 _records = {}
 
 
+def isValidKey(key: str) -> bool:
+    """
+    Returns True if the key does not contain any spaces.
+    """
+    return " " not in key
+
 def insert(sale: Sale):
     """Insert a sale into the database."""
     key = uuid4().hex
