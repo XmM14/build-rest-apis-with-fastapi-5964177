@@ -36,3 +36,41 @@ Validate that {id} is a valid VM id and return a JSON message:
         }
     }
 """
+from fastapi import FastAPI, HTTPException
+from http import HTTPStatus
+from pydantic import BaseModel, Field
+from typing import Annotated, Literal
+import uuid
+
+
+class VMStartRequest(BaseModel):
+    cpu_count: Annotated[int, Field(gt=0, lt=65)]
+    mem_size_gb: Annotated[int, Field(gt=8, lt=1025)]
+    image: Literal["ubuntu-24.04", "debian:bookworm", "alpine:3.20"]
+
+
+app = FastAPI()
+
+VM_STORE = dict()
+
+
+@app.post("/vm/start")
+async def start_vm(request: VMStartRequest):
+    vm_id = uuid.uuid4().hex
+    VM_STORE[vm_id] = {
+        "cpu_count": request.cpu_count,
+        "mem_size_gb": request.mem_size_gb,
+        "image": request.image
+    }
+    return {"id": vm_id}
+
+
+@app.post("/vm/{id}/stop")
+def stop_vm(id: str):
+    if id in VM_STORE:
+        return {
+            "id": id,
+            "spec": VM_STORE[id]
+        }
+    raise HTTPException(status_code=HTTPStatus.BAD_REQUEST,
+                        detail="ID not found!")

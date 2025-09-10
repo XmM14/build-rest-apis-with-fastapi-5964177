@@ -2,13 +2,13 @@
 POST http://localhost:8000/vm/start
 
 {
-    "cpu_count": 4,
-    "mem_size_gb": 32,
+    "cpu_count": 12,
+    "mem_size_gb": 100,
     "image": "debian:bookworm"
 }
 
 ### Stop (change ID)
-POST http://localhost:8000/vm/d498c9e0921c43d48d45247ecce8557e/stop
+POST http://localhost:8000/vm/"put the id here"/stop
 
 ### CPU count too high
 POST http://localhost:8000/vm/start
